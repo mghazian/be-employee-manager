@@ -74,6 +74,8 @@ public class DepartmentServiceImpl implements DepartmentService {
                         .code(values[0])
                         .name(values[1])
                         .build());
+
+                lineNo++;
             }
 
             if (!errors.isEmpty()) {
