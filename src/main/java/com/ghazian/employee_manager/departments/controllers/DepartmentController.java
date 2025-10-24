@@ -2,7 +2,7 @@ package com.ghazian.employee_manager.departments.controllers;
 
 import com.ghazian.employee_manager.core.dto.Pagination;
 import com.ghazian.employee_manager.core.dto.RestResponse;
-import com.ghazian.employee_manager.departments.dto.CreateDepartmentParam;
+import com.ghazian.employee_manager.departments.dto.WriteDepartmentParam;
 import com.ghazian.employee_manager.departments.dto.DepartmentDTO;
 import com.ghazian.employee_manager.departments.services.DepartmentService;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class DepartmentController {
     }
 
     @PostMapping
-    public ResponseEntity<DepartmentDTO> create(@RequestBody CreateDepartmentParam param) {
+    public ResponseEntity<DepartmentDTO> create(@RequestBody WriteDepartmentParam param) {
         return ResponseEntity.ok(departmentService.create(param));
     }
 
@@ -40,7 +40,8 @@ public class DepartmentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DepartmentDTO> update(@RequestBody DepartmentDTO input) {
-        return ResponseEntity.ok(departmentService.update(input));
+    public ResponseEntity<DepartmentDTO> update(@PathVariable("id") Long id,
+                                                @RequestBody WriteDepartmentParam input) {
+        return ResponseEntity.ok(departmentService.update(id, input));
     }
 }

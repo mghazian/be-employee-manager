@@ -5,7 +5,7 @@ import com.ghazian.employee_manager.core.exceptions.ResourceNotFoundException;
 import com.ghazian.employee_manager.core.exceptions.ValidationException;
 import com.ghazian.employee_manager.core.models.Department;
 import com.ghazian.employee_manager.core.repositories.DepartmentRepository;
-import com.ghazian.employee_manager.departments.dto.CreateDepartmentParam;
+import com.ghazian.employee_manager.departments.dto.WriteDepartmentParam;
 import com.ghazian.employee_manager.departments.dto.DepartmentDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -91,7 +91,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public DepartmentDTO create(CreateDepartmentParam param) {
+    public DepartmentDTO create(WriteDepartmentParam param) {
         Map<String, Object> errors = new HashMap<>();
         if ( Optional
                 .ofNullable(param.getCode())
@@ -137,11 +137,8 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public DepartmentDTO update(DepartmentDTO newData) {
+    public DepartmentDTO update(long id, WriteDepartmentParam newData) {
         Map<String, Object> errors = new HashMap<>();
-        if ( newData.getId() == null ) {
-            errors.put("id", "ID cannot be null");
-        }
         if ( !StringUtils.hasLength(newData.getCode()) ) {
             errors.put("code", "Code cannot be empty");
         }
@@ -153,7 +150,7 @@ public class DepartmentServiceImpl implements DepartmentService {
             throw new ValidationException(errors);
         }
 
-        Department department = departmentRepository.findById(newData.getId())
+        Department department = departmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Department does not exist"));
 
         department.setCode(newData.getCode());

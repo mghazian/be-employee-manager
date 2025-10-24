@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateDepartmentParam {
+public class WriteDepartmentParam {
     String code;
     String name;
 }
