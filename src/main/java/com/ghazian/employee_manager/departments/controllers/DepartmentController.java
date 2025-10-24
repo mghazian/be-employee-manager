@@ -33,4 +33,9 @@ public class DepartmentController {
     public ResponseEntity<DepartmentDTO> create(@RequestBody CreateDepartmentParam param) {
         return ResponseEntity.ok(departmentService.create(param));
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<DepartmentDTO> getById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(departmentService.getOne(id));
+    }
 }

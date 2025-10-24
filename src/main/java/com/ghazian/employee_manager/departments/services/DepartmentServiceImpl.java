@@ -1,6 +1,7 @@
 package com.ghazian.employee_manager.departments.services;
 
 import com.ghazian.employee_manager.core.dto.Pagination;
+import com.ghazian.employee_manager.core.exceptions.ResourceNotFoundException;
 import com.ghazian.employee_manager.core.exceptions.ValidationException;
 import com.ghazian.employee_manager.core.models.Department;
 import com.ghazian.employee_manager.core.repositories.DepartmentRepository;
@@ -25,13 +26,15 @@ public class DepartmentServiceImpl implements DepartmentService {
     public Pagination<DepartmentDTO> getPaginated(int pageIndex, int size) {
         Page<Department> departments = departmentRepository.findAll(PageRequest.of(pageIndex, size));
 
-        final List<DepartmentDTO> departmentDTOs = departments.stream().map(v -> {
-            return DepartmentDTO.builder()
+        final DepartmentDTO.DepartmentDTOBuilder builder = DepartmentDTO.builder();
+
+        final List<DepartmentDTO> departmentDTOs = departments.stream().map(v ->
+                builder
                     .id(v.getId())
                     .code(v.getCode())
                     .name(v.getName())
-                    .build();
-        }).toList();
+                    .build()
+        ).toList();
 
         return Pagination.<DepartmentDTO>builder()
                 .data(departmentDTOs)
@@ -119,5 +122,16 @@ public class DepartmentServiceImpl implements DepartmentService {
                 .code(entity.getCode())
                 .name(entity.getName())
                 .build();
+    }
+
+    @Override
+    public DepartmentDTO getOne(long id) {
+        return departmentRepository.findById(id)
+                .map(v -> DepartmentDTO.builder()
+                        .name(v.getName())
+                        .code(v.getCode())
+                        .id(v.getId())
+                        .build())
+                .orElseThrow(() -> new ResourceNotFoundException("Department does not exist"));
     }
 }

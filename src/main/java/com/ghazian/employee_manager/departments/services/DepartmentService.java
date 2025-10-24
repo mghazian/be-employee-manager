@@ -9,4 +9,5 @@ public interface DepartmentService {
     Pagination<DepartmentDTO> getPaginated(int pageIndex, int size);
     void importFile(MultipartFile file);
     DepartmentDTO create(CreateDepartmentParam param);
+    DepartmentDTO getOne(long id);
 }
