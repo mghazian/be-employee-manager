@@ -5,9 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ghazian.employee_manager.core.exceptions.ValidationException;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.NoHandlerFoundException;
+
+import java.util.Map;
 
 @ControllerAdvice
 public class ErrorHandler {
@@ -23,16 +26,23 @@ public class ErrorHandler {
         try {
             return ResponseEntity
                     .status(HttpStatusCode.valueOf(400))
-                    .body(objectMapper.writeValueAsString(ex));
+                    .body(objectMapper.writeValueAsString(Map.of("errors", ex.getErrors())));
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
-    public ResponseEntity<String> noHandlerFoundExceptionHandler(NoHandlerFoundException ex) {
+    public ResponseEntity<Object> noHandlerFoundExceptionHandler(NoHandlerFoundException ex) {
         return ResponseEntity
                 .status(HttpStatusCode.valueOf(404))
-                .body("");
+                .body(null);
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<Object> methodNotSupportedException(HttpRequestMethodNotSupportedException ex) {
+        return ResponseEntity
+                .status(HttpStatusCode.valueOf(405))
+                .body(null);
     }
 }
