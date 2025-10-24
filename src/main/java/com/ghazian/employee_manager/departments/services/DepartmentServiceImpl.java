@@ -4,6 +4,7 @@ import com.ghazian.employee_manager.core.dto.Pagination;
 import com.ghazian.employee_manager.core.exceptions.ValidationException;
 import com.ghazian.employee_manager.core.models.Department;
 import com.ghazian.employee_manager.core.repositories.DepartmentRepository;
+import com.ghazian.employee_manager.departments.dto.CreateDepartmentParam;
 import com.ghazian.employee_manager.departments.dto.DepartmentDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -12,10 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -86,5 +84,40 @@ public class DepartmentServiceImpl implements DepartmentService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public DepartmentDTO create(CreateDepartmentParam param) {
+        Map<String, Object> errors = new HashMap<>();
+        if ( Optional
+                .ofNullable(param.getCode())
+                .map(String::isBlank)
+                .orElse(true)
+        ) {
+            errors.put("code", "Department code cannot be empty");
+        }
+        if ( Optional
+                .ofNullable(param.getName())
+                .map(String::isBlank)
+                .orElse(true) ) {
+            errors.put("name", "Department name cannot be empty");
+        }
+
+        if ( errors.size() > 0 ) {
+            throw new ValidationException(errors);
+        }
+
+        Department entity = Department.builder()
+                .code(param.getCode())
+                .name(param.getName())
+                .build();
+
+        entity = departmentRepository.save(entity);
+
+        return DepartmentDTO.builder()
+                .id(entity.getId())
+                .code(entity.getCode())
+                .name(entity.getName())
+                .build();
     }
 }

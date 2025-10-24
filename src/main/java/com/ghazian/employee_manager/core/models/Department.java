@@ -18,7 +18,8 @@ import java.time.ZonedDateTime;
 @Table(name = "departments")
 public class Department {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "departments_id_seq", sequenceName = "departments_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "departments_id_seq")
     Long id;
 
     String code;

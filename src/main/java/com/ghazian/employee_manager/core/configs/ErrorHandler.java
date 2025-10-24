@@ -22,7 +22,7 @@ public class ErrorHandler {
         try {
             return ResponseEntity
                     .status(HttpStatusCode.valueOf(400))
-                    .body(objectMapper.writeValueAsString(ex.getErrors()));
+                    .body(objectMapper.writeValueAsString(ex));
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
