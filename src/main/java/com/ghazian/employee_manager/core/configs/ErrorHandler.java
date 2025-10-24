@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 @ControllerAdvice
 public class ErrorHandler {
@@ -26,5 +27,12 @@ public class ErrorHandler {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<String> noHandlerFoundExceptionHandler(NoHandlerFoundException ex) {
+        return ResponseEntity
+                .status(HttpStatusCode.valueOf(404))
+                .body("");
     }
 }
