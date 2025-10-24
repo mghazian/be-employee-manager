@@ -38,4 +38,9 @@ public class DepartmentController {
     public ResponseEntity<DepartmentDTO> getById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(departmentService.getOne(id));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<DepartmentDTO> update(@RequestBody DepartmentDTO input) {
+        return ResponseEntity.ok(departmentService.update(input));
+    }
 }

@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
@@ -133,5 +134,36 @@ public class DepartmentServiceImpl implements DepartmentService {
                         .id(v.getId())
                         .build())
                 .orElseThrow(() -> new ResourceNotFoundException("Department does not exist"));
+    }
+
+    @Override
+    public DepartmentDTO update(DepartmentDTO newData) {
+        Map<String, Object> errors = new HashMap<>();
+        if ( newData.getId() == null ) {
+            errors.put("id", "ID cannot be null");
+        }
+        if ( !StringUtils.hasLength(newData.getCode()) ) {
+            errors.put("code", "Code cannot be empty");
+        }
+        if ( !StringUtils.hasLength(newData.getName()) ) {
+            errors.put("name", "Name cannot be empty");
+        }
+
+        if ( !errors.isEmpty() ) {
+            throw new ValidationException(errors);
+        }
+
+        Department department = departmentRepository.findById(newData.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Department does not exist"));
+
+        department.setCode(newData.getCode());
+        department.setName(newData.getName());
+
+        department = departmentRepository.save(department);
+
+        return DepartmentDTO.builder()
+                .name(department.getName())
+                .code(department.getCode())
+                .build();
     }
 }

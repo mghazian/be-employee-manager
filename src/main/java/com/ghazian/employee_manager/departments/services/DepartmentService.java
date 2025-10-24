@@ -10,4 +10,5 @@ public interface DepartmentService {
     void importFile(MultipartFile file);
     DepartmentDTO create(CreateDepartmentParam param);
     DepartmentDTO getOne(long id);
+    DepartmentDTO update(DepartmentDTO newData);
 }
