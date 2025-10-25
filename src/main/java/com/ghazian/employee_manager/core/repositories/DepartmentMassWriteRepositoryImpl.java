@@ -20,11 +20,13 @@ public class DepartmentMassWriteRepositoryImpl implements DepartmentMassWriteRep
     @Override
     public void massInsert(List<Department> input) {
         String sql = "INSERT INTO departments (code, name) VALUES :valuePlaceholder";
+        final int COLUMN_NUMBER = 2;
+        final int MAX_ROW_PER_BATCH = BATCH_VALUE_COUNT_LIMIT / COLUMN_NUMBER;
 
         try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(false);
 
-            for (int currentIndex = 0; currentIndex < input.size(); currentIndex += BATCH_VALUE_COUNT_LIMIT) {
+            for (int currentIndex = 0; currentIndex < input.size(); currentIndex += MAX_ROW_PER_BATCH) {
                 StringBuilder valuePlaceholderBuilder = new StringBuilder();
                 for (int i = 0; i + currentIndex < input.size(); i++) {
                     valuePlaceholderBuilder.append("(?, ?), ");
@@ -34,7 +36,7 @@ public class DepartmentMassWriteRepositoryImpl implements DepartmentMassWriteRep
                 final String valuePlaceholder = valuePlaceholderBuilder.substring(0, valuePlaceholderBuilder.length() - 2);
 
                 try (PreparedStatement preparedStatement = connection.prepareStatement(sql.replace(":valuePlaceholder", valuePlaceholder))) {
-                    List<Department> currentBatchValues = input.subList(currentIndex, Math.min(input.size(), currentIndex + BATCH_VALUE_COUNT_LIMIT));
+                    List<Department> currentBatchValues = input.subList(currentIndex, Math.min(input.size(), currentIndex + MAX_ROW_PER_BATCH));
 
                     int placeholderIndex = 1; // 1-based
                     for (Department department : currentBatchValues) {
