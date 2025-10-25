@@ -2,6 +2,8 @@ package com.ghazian.employee_manager.core.configs;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ghazian.employee_manager.core.dto.RestResponse;
+import com.ghazian.employee_manager.core.exceptions.ResourceNotFoundException;
 import com.ghazian.employee_manager.core.exceptions.ValidationException;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,13 @@ public class ErrorHandler {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<RestResponse> resourceNotFoundExceptionHandler(ResourceNotFoundException ex) {
+        return ResponseEntity
+                .status(HttpStatusCode.valueOf(400))
+                .body(new RestResponse(ex.getMessage()));
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)

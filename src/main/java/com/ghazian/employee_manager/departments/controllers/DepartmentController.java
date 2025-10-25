@@ -44,4 +44,10 @@ public class DepartmentController {
                                                 @RequestBody WriteDepartmentParam input) {
         return ResponseEntity.ok(departmentService.update(id, input));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<RestResponse> deleteById(@PathVariable("id") Long id) {
+        departmentService.delete(id);
+        return ResponseEntity.ok(new RestResponse("Department deleted successfully"));
+    }
 }

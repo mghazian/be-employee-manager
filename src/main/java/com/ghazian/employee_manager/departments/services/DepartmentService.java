@@ -11,4 +11,5 @@ public interface DepartmentService {
     DepartmentDTO create(WriteDepartmentParam param);
     DepartmentDTO getOne(long id);
     DepartmentDTO update(long id, WriteDepartmentParam newData);
+    void delete(long id);
 }
