@@ -23,7 +23,7 @@ create unique index if not exists idx_locations_code on locations (code);
 
 create table if not exists tiers (
     id bigserial primary key,
-    code varchar not null,
+    code int not null,
     name varchar not null,
 
     created_at timestamptz not null default current_timestamp,
@@ -34,9 +34,9 @@ create unique index if not exists idx_tiers_code on tiers (code);
 
 create table if not exists employees (
     id bigserial primary key,
-    "no" bigint not null,
+    "no" int not null,
     name varchar not null,
-    tier_code varchar default null,
+    tier_code int default null,
     department_code varchar default null,
     location_code varchar default null,
     supervisor_no int default null,
