@@ -7,6 +7,7 @@ import com.ghazian.employee_manager.core.exceptions.ResourceNotFoundException;
 import com.ghazian.employee_manager.core.exceptions.ValidationException;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -53,5 +54,12 @@ public class ErrorHandler {
         return ResponseEntity
                 .status(HttpStatusCode.valueOf(405))
                 .body(null);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<RestResponse> httpMessageNotReadableExceptionHandler(HttpMessageNotReadableException ex) {
+        return ResponseEntity
+                .status(HttpStatusCode.valueOf(400))
+                .body(new RestResponse("JSON malformed. Unable to parse JSON"));
     }
 }
