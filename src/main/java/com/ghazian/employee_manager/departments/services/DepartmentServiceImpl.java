@@ -159,6 +159,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         department = departmentRepository.save(department);
 
         return DepartmentDTO.builder()
+                .id(department.getId())
                 .name(department.getName())
                 .code(department.getCode())
                 .build();
