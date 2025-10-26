@@ -66,4 +66,35 @@ public interface EmployeeAnalyticRepository extends Repository<Employee, Long> {
             order by base.department_code asc, base."no" asc
             """)
     List<CumulativeSalaryPerDepartmentDTO> getCumulativeSalaryPerDepartment();
+
+    @Query(nativeQuery = true, value = """
+            with sorted_entries as (
+                select e.id, location_code, l.name as location_name, department_code, d.name as department_name, t.name as tier_name, e."name" , e."no" , e.salary, (
+                    select count(*) + 1
+                    from employees e2
+                    where e2.salary > e.salary
+                        and e2.location_code = e.location_code
+                        and e2.department_code = e.department_code
+                ) as current_rank
+                from employees e
+                join departments d on d.code = e.department_code\s
+                join locations l on l.code = e.location_code\s
+                join tiers t on t.code = e.tier_code\s
+                order by location_name desc, department_name asc, salary desc
+            )
+            select location_name, department_name, tier_name, "name", "no", salary, coalesce((
+                select next_higher.salary - base.salary
+                from sorted_entries next_higher
+                where next_higher.salary >= base.salary
+                    and next_higher.location_code = base.location_code
+                    and next_higher.department_code = base.department_code
+                    and base.id <> next_higher.id
+                order by next_higher.salary desc
+                limit 1
+            ), 0) as salary_gap
+            from sorted_entries base
+            """)
+    List<CumulativeSalaryPerDepartmentDTO> getSalaryRankingAndGapAnalysis();
+
+
 }
