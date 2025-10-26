@@ -55,4 +55,15 @@ public interface EmployeeAnalyticRepository extends Repository<Employee, Long> {
             """
     )
     List<DepartmentAnalysisByLocationDTO> getDepartmentAnalysisByLocation();
+
+    @Query(nativeQuery = true, value = """
+            select base.department_code, base."no", base."name", (select sum(salary) as cumulative_salary
+            	from employees next
+            	where base.department_code = next.department_code
+            		and next.no < base.no
+            		and base.id <> next.id)
+            from employees base
+            order by base.department_code asc, base."no" asc
+            """)
+    List<CumulativeSalaryPerDepartmentDTO> getCumulativeSalaryPerDepartment();
 }
