@@ -3,6 +3,7 @@ package com.ghazian.employee_manager.employees.services;
 import com.ghazian.employee_manager.employees.repositories.EmployeeAnalyticRepository;
 import com.ghazian.employee_manager.employees.repositories.projections.CumulativeSalaryPerDepartmentDTO;
 import com.ghazian.employee_manager.employees.repositories.projections.DepartmentAnalysisByLocationDTO;
+import com.ghazian.employee_manager.employees.repositories.projections.SalaryRankingAndGapAnalysisDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,7 @@ public class EmployeeAnalyticServiceImpl implements EmployeeAnalyticService {
     }
 
     @Override
-    public List<CumulativeSalaryPerDepartmentDTO> getSalaryRankingAndGapAnalysis() {
+    public List<SalaryRankingAndGapAnalysisDTO> getSalaryRankingAndGapAnalysis() {
         return employeeAnalyticRepository.getSalaryRankingAndGapAnalysis();
     }
 }

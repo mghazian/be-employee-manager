@@ -7,6 +7,7 @@ import com.ghazian.employee_manager.employees.dto.EmployeeOption;
 import com.ghazian.employee_manager.employees.dto.WriteEmployeeParam;
 import com.ghazian.employee_manager.employees.repositories.projections.CumulativeSalaryPerDepartmentDTO;
 import com.ghazian.employee_manager.employees.repositories.projections.DepartmentAnalysisByLocationDTO;
+import com.ghazian.employee_manager.employees.repositories.projections.SalaryRankingAndGapAnalysisDTO;
 import com.ghazian.employee_manager.employees.services.EmployeeAnalyticService;
 import com.ghazian.employee_manager.employees.services.EmployeeService;
 import lombok.RequiredArgsConstructor;
@@ -74,7 +75,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/analytics/salary-ranking")
-    public ResponseEntity<List<CumulativeSalaryPerDepartmentDTO>> getSalaryRankingAndGapAnalysis() {
+    public ResponseEntity<List<SalaryRankingAndGapAnalysisDTO>> getSalaryRankingAndGapAnalysis() {
         return ResponseEntity.ok(employeeAnalyticService.getSalaryRankingAndGapAnalysis());
     }
 }
