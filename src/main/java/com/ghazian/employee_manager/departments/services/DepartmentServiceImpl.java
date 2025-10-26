@@ -90,22 +90,28 @@ public class DepartmentServiceImpl implements DepartmentService {
         }
     }
 
-    @Override
-    public DepartmentDTO create(WriteDepartmentParam param) {
+    private Map<String, Object> validateWriteDepartmentParam(WriteDepartmentParam param) {
         Map<String, Object> errors = new HashMap<>();
         if ( Optional
                 .ofNullable(param.getCode())
                 .map(String::isBlank)
                 .orElse(true)
         ) {
-            errors.put("code", "Department code cannot be empty");
+            errors.put("code", List.of("Department code cannot be empty"));
         }
         if ( Optional
                 .ofNullable(param.getName())
                 .map(String::isBlank)
                 .orElse(true) ) {
-            errors.put("name", "Department name cannot be empty");
+            errors.put("code", List.of("Department name cannot be empty"));
         }
+
+        return errors;
+    }
+
+    @Override
+    public DepartmentDTO create(WriteDepartmentParam param) {
+        Map<String, Object> errors = validateWriteDepartmentParam(param);
 
         if ( errors.size() > 0 ) {
             throw new ValidationException(errors);
@@ -138,13 +144,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public DepartmentDTO update(long id, WriteDepartmentParam newData) {
-        Map<String, Object> errors = new HashMap<>();
-        if ( !StringUtils.hasLength(newData.getCode()) ) {
-            errors.put("code", "Code cannot be empty");
-        }
-        if ( !StringUtils.hasLength(newData.getName()) ) {
-            errors.put("name", "Name cannot be empty");
-        }
+        Map<String, Object> errors = validateWriteDepartmentParam(newData);
 
         if ( !errors.isEmpty() ) {
             throw new ValidationException(errors);
