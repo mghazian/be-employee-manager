@@ -5,6 +5,9 @@ import com.ghazian.employee_manager.core.dto.RestResponse;
 import com.ghazian.employee_manager.employees.dto.EmployeeApiResponseDTO;
 import com.ghazian.employee_manager.employees.dto.EmployeeOption;
 import com.ghazian.employee_manager.employees.dto.WriteEmployeeParam;
+import com.ghazian.employee_manager.employees.repositories.projections.CumulativeSalaryPerDepartmentDTO;
+import com.ghazian.employee_manager.employees.repositories.projections.DepartmentAnalysisByLocationDTO;
+import com.ghazian.employee_manager.employees.services.EmployeeAnalyticService;
 import com.ghazian.employee_manager.employees.services.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +22,7 @@ import java.util.List;
 public class EmployeeController {
 
     private final EmployeeService employeeService;
+    private final EmployeeAnalyticService employeeAnalyticService;
 
     @GetMapping
     public ResponseEntity<Pagination<EmployeeApiResponseDTO>> getDto(@RequestParam(defaultValue = "10") int size,
@@ -57,5 +61,20 @@ public class EmployeeController {
     @GetMapping("/option")
     public ResponseEntity<List<EmployeeOption>> getAllOptions() {
         return ResponseEntity.ok(employeeService.getAllOptions());
+    }
+
+    @GetMapping("/analytics/department-by-location")
+    public ResponseEntity<List<DepartmentAnalysisByLocationDTO>> getDepartmentByLocationAnalysis() {
+        return ResponseEntity.ok(employeeAnalyticService.getDepartmentAnalysisByLocation());
+    }
+
+    @GetMapping("/analytics/cumulative-salary-per-department")
+    public ResponseEntity<List<CumulativeSalaryPerDepartmentDTO>> getCumulativeSalaryPerDepartment() {
+        return ResponseEntity.ok(employeeAnalyticService.getCumulativeSalaryPerDepartment());
+    }
+
+    @GetMapping("/analytics/salary-ranking")
+    public ResponseEntity<List<CumulativeSalaryPerDepartmentDTO>> getSalaryRankingAndGapAnalysis() {
+        return ResponseEntity.ok(employeeAnalyticService.getSalaryRankingAndGapAnalysis());
     }
 }
