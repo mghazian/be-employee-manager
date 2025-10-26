@@ -1,0 +1,66 @@
+package com.ghazian.employee_manager.core.repositories;
+
+import com.ghazian.employee_manager.core.models.Employee;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.util.List;
+
+@Repository
+@RequiredArgsConstructor
+public class EmployeeMassWriteRepositoryImpl implements EmployeeMassWriteRepository {
+    private final DataSource dataSource;
+
+    static final int BATCH_VALUE_COUNT_LIMIT = 30000;
+
+    @Override
+    public void massInsert(List<Employee> input) {
+        String sql = "INSERT INTO employees (no, name, tier_code, department_code, location_code, supervisor_no, salary, entry_date) VALUES :valuePlaceholder";
+        final int COLUMN_NUMBER = 8;
+        final int MAX_ROW_PER_BATCH = BATCH_VALUE_COUNT_LIMIT / COLUMN_NUMBER;
+
+        try (Connection connection = dataSource.getConnection()) {
+            connection.setAutoCommit(false);
+
+            for (int currentIndex = 0; currentIndex < input.size(); currentIndex += MAX_ROW_PER_BATCH) {
+                StringBuilder valuePlaceholderBuilder = new StringBuilder();
+                for (int i = 0; i + currentIndex < input.size(); i++) {
+                    valuePlaceholderBuilder.append("(?, ?, ?, ?, ?, ?, ?, ?), ");
+                }
+
+                // Remove the last comma
+                final String valuePlaceholder = valuePlaceholderBuilder.substring(0, valuePlaceholderBuilder.length() - 2);
+
+                try (PreparedStatement preparedStatement = connection.prepareStatement(sql.replace(":valuePlaceholder", valuePlaceholder))) {
+                    List<Employee> currentBatchValues = input.subList(currentIndex, Math.min(input.size(), currentIndex + MAX_ROW_PER_BATCH));
+
+                    int placeholderIndex = 1; // 1-based
+                    for (Employee data : currentBatchValues) {
+                        preparedStatement.setLong(placeholderIndex++, data.getNo());
+                        preparedStatement.setString(placeholderIndex++, data.getName());
+                        preparedStatement.setLong(placeholderIndex++, data.getTierCode());
+                        preparedStatement.setString(placeholderIndex++, data.getDepartmentCode());
+                        preparedStatement.setString(placeholderIndex++, data.getLocationCode());
+
+                        if ( null == data.getSupervisorNo() ) { preparedStatement.setNull(placeholderIndex++, Types.BIGINT); }
+                        else { preparedStatement.setLong(placeholderIndex++, data.getSupervisorNo()); }
+
+                        preparedStatement.setLong(placeholderIndex++, data.getSalary());
+                        preparedStatement.setTimestamp(placeholderIndex++, java.sql.Timestamp.valueOf(data.getEntryDate().toLocalDateTime()));
+                    }
+
+                    preparedStatement.execute();
+                }
+            }
+
+            connection.commit();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
