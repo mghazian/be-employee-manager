@@ -72,6 +72,10 @@ public class DepartmentServiceImpl implements DepartmentService {
                     lineErrors.add("Department name cannot be empty");
                 }
 
+                if ( !lineErrors.isEmpty() ) {
+                    errors.put(String.valueOf(lineNo), lineErrors);
+                }
+
                 inputs.add(builder
                         .code(values[0])
                         .name(values[1])

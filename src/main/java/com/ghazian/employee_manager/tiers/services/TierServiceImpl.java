@@ -74,6 +74,10 @@ public class TierServiceImpl implements TierService {
                     lineErrors.add("Tier name cannot be empty");
                 }
 
+                if ( !lineErrors.isEmpty() ) {
+                    errors.put(String.valueOf(lineNo), lineErrors);
+                }
+
                 inputs.add(builder
                         .code(Long.parseLong(values[0])) // Parsing may slow down processing. Should we remove the parsing?
                         .name(values[1])
