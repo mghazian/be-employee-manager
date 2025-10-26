@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ghazian.employee_manager.core.dto.RestResponse;
 import com.ghazian.employee_manager.core.exceptions.ResourceNotFoundException;
 import com.ghazian.employee_manager.core.exceptions.ValidationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -61,5 +62,12 @@ public class ErrorHandler {
         return ResponseEntity
                 .status(HttpStatusCode.valueOf(400))
                 .body(new RestResponse("JSON malformed. Unable to parse JSON"));
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<RestResponse> runtimeExceptionHandler(RuntimeException ex) {
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new RestResponse(ex.getMessage()));
     }
 }
