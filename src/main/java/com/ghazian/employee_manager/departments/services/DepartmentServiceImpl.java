@@ -46,7 +46,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public void importFile(MultipartFile file) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
-            Map<String, Object> errors = new HashMap<>();
+            Map<String, List<String>> errors = new HashMap<>();
             List<Department> inputs = new ArrayList<>();
 
             Department.DepartmentBuilder builder = Department.builder();
@@ -90,8 +90,8 @@ public class DepartmentServiceImpl implements DepartmentService {
         }
     }
 
-    private Map<String, Object> validateWriteDepartmentParam(WriteDepartmentParam param) {
-        Map<String, Object> errors = new HashMap<>();
+    private Map<String, List<String>> validateWriteDepartmentParam(WriteDepartmentParam param) {
+        Map<String, List<String>> errors = new HashMap<>();
         if ( Optional
                 .ofNullable(param.getCode())
                 .map(String::isBlank)
@@ -111,7 +111,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public DepartmentDTO create(WriteDepartmentParam param) {
-        Map<String, Object> errors = validateWriteDepartmentParam(param);
+        Map<String, List<String>> errors = validateWriteDepartmentParam(param);
 
         if ( errors.size() > 0 ) {
             throw new ValidationException(errors);
@@ -144,7 +144,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public DepartmentDTO update(long id, WriteDepartmentParam newData) {
-        Map<String, Object> errors = validateWriteDepartmentParam(newData);
+        Map<String, List<String>> errors = validateWriteDepartmentParam(newData);
 
         if ( !errors.isEmpty() ) {
             throw new ValidationException(errors);

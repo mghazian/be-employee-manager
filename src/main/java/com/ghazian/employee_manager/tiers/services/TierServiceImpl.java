@@ -48,7 +48,7 @@ public class TierServiceImpl implements TierService {
     @Override
     public void importFile(MultipartFile file) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
-            Map<String, Object> errors = new HashMap<>();
+            Map<String, List<String>> errors = new HashMap<>();
             List<Tier> inputs = new ArrayList<>();
 
             Tier.TierBuilder builder = Tier.builder();
@@ -92,8 +92,8 @@ public class TierServiceImpl implements TierService {
         }
     }
 
-    Map<String, Object> validateWriteTierParam (WriteTierParam param) {
-        Map<String, Object> errors = new HashMap<>();
+    Map<String, List<String>> validateWriteTierParam (WriteTierParam param) {
+        Map<String, List<String>> errors = new HashMap<>();
 
         List<String> codeErrorList = new ArrayList<>();
         if ( Optional
@@ -127,7 +127,7 @@ public class TierServiceImpl implements TierService {
 
     @Override
     public TierDTO create(WriteTierParam param) {
-        Map<String, Object> errors = validateWriteTierParam(param);
+        Map<String, List<String>> errors = validateWriteTierParam(param);
 
         if ( errors.size() > 0 ) {
             throw new ValidationException(errors);
@@ -160,7 +160,7 @@ public class TierServiceImpl implements TierService {
 
     @Override
     public TierDTO update(long id, WriteTierParam newData) {
-        Map<String, Object> errors = validateWriteTierParam(newData);
+        Map<String, List<String>> errors = validateWriteTierParam(newData);
 
         if ( !errors.isEmpty() ) {
             throw new ValidationException(errors);
