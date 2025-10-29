@@ -28,6 +28,6 @@ public class ApiLoggingFilter extends OncePerRequestFilter {
                 .responseStatus(response.getStatus())
                 .build();
 
-        apiCallHistoryRepository.save(entry);
+        apiCallHistoryRepository.insert(entry);
     }
 }
