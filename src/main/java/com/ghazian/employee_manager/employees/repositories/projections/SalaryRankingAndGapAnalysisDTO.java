@@ -2,14 +2,18 @@ package com.ghazian.employee_manager.employees.repositories.projections;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.Builder;
+import lombok.Data;
 
+@Data
+@Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public interface SalaryRankingAndGapAnalysisDTO {
-    String getLocationName();
-    String getDepartmentName();
-    String getTierName();
-    String getName();
-    Long getSalary();
-    Long getNo();
-    Long getSalaryGap();
+public class SalaryRankingAndGapAnalysisDTO {
+    String locationName;
+    String departmentName;
+    String tierName;
+    String name;
+    Long salary;
+    Long no;
+    Long salaryGap;
 }
