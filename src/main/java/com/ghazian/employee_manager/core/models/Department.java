@@ -11,24 +11,13 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.ZonedDateTime;
 
 @Data
-@Entity
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "departments")
 public class Department {
-    @Id
-    @SequenceGenerator(name = "departments_id_seq", sequenceName = "departments_id_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "departments_id_seq")
     Long id;
-
     String code;
-
     String name;
-
-    @CreationTimestamp
     ZonedDateTime createdAt;
-
-    @UpdateTimestamp
     ZonedDateTime updatedAt;
 }
