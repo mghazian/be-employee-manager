@@ -126,7 +126,7 @@ public class DepartmentServiceImpl implements DepartmentService {
                 .name(param.getName())
                 .build();
 
-        entity = departmentRepository.save(entity);
+        entity = departmentRepository.insert(entity);
 
         return DepartmentDTO.builder()
                 .id(entity.getId())
@@ -160,7 +160,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         department.setCode(newData.getCode());
         department.setName(newData.getName());
 
-        department = departmentRepository.save(department);
+        department = departmentRepository.update(id, department);
 
         return DepartmentDTO.builder()
                 .id(department.getId())
@@ -171,9 +171,9 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public void delete(long id) {
-        Department department = departmentRepository.findById(id)
+        departmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Department does not exist"));
 
-        departmentRepository.delete(department);
+        departmentRepository.delete(id);
     }
 }

@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
@@ -142,7 +141,7 @@ public class TierServiceImpl implements TierService {
                 .name(param.getName())
                 .build();
 
-        entity = tierRepository.save(entity);
+        entity = tierRepository.insert(entity);
 
         return TierDTO.builder()
                 .id(entity.getId())
@@ -176,7 +175,7 @@ public class TierServiceImpl implements TierService {
         row.setCode(Long.parseLong(newData.getCode()));
         row.setName(newData.getName());
 
-        row = tierRepository.save(row);
+        row = tierRepository.update(id, row);
 
         return TierDTO.builder()
                 .id(row.getId())
@@ -187,9 +186,9 @@ public class TierServiceImpl implements TierService {
 
     @Override
     public void delete(long id) {
-        Tier row = tierRepository.findById(id)
+        tierRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Tier does not exist"));
 
-        tierRepository.delete(row);
+        tierRepository.delete(id);
     }
 }

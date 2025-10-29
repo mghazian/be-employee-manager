@@ -1,9 +1,8 @@
 package com.ghazian.employee_manager.core.repositories;
 
 import com.ghazian.employee_manager.core.models.Location;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import com.ghazian.employee_manager.core.repositories.base.MassWriteRepository;
+import com.ghazian.employee_manager.core.repositories.base.RawQueryRepository;
 
-@Repository
-public interface LocationRepository extends JpaRepository<Location, Long>, LocationMassWriteRepository {
+public interface LocationRepository extends RawQueryRepository<Location, Long>, MassWriteRepository<Location> {
 }

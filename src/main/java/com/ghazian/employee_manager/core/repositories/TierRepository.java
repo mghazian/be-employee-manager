@@ -1,9 +1,10 @@
 package com.ghazian.employee_manager.core.repositories;
 
 import com.ghazian.employee_manager.core.models.Tier;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import com.ghazian.employee_manager.core.repositories.base.MassWriteRepository;
+import com.ghazian.employee_manager.core.repositories.base.RawQueryRepository;
 
-@Repository
-public interface TierRepository extends JpaRepository<Tier, Long>, TierMassWriteRepository {
+import java.util.List;
+
+public interface TierRepository extends RawQueryRepository<Tier, Long>, MassWriteRepository<Tier> {
 }

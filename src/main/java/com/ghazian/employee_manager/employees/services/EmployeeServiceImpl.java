@@ -300,7 +300,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .entryDate(LocalDateTime.parse(param.getEntryDate(), entryDateFormatter).atZone(zoneId))
                 .build();
 
-        entity = employeeRepository.save(entity);
+        entity = employeeRepository.insert(entity);
 
         return getOne(entity.getId());
     }
@@ -332,17 +332,17 @@ public class EmployeeServiceImpl implements EmployeeService {
         row.setSalary(Long.parseLong(newData.getSalary()));
         row.setEntryDate(LocalDateTime.parse(newData.getEntryDate(), entryDateFormatter).atZone(zoneId));
 
-        row = employeeRepository.save(row);
+        row = employeeRepository.update(id, row);
 
         return getOne(row.getId());
     }
 
     @Override
     public void delete(long id) {
-        Employee row = employeeRepository.findById(id)
+        employeeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee does not exist"));
 
-        employeeRepository.delete(row);
+        employeeRepository.delete(id);
     }
 
     @Override
@@ -350,7 +350,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         List<EmployeeOption> output = new ArrayList<>();
         EmployeeOption.EmployeeOptionBuilder builder = EmployeeOption.builder();
 
-        for (Employee employee : employeeRepository.findAll()) {
+        for (Employee employee : employeeRepository.findAll(null).getContent()) {
             output.add(builder.no(employee.getNo())
                     .name(employee.getName())
                     .build());

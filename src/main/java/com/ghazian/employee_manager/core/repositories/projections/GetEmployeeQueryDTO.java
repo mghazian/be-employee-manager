@@ -1,31 +1,38 @@
 package com.ghazian.employee_manager.core.repositories.projections;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 
-public interface GetEmployeeQueryDTO {
-    Long getId();
-    Long getNo();
-    String getName();
-    Long getTierCode();
-    String getDepartmentCode();
-    String getLocationCode();
-    Long getSupervisorNo();
-    Long getSalary();
-    Instant getEntryDate();
-    Instant getCreatedAt();
-    Instant getUpdatedAt();
+@Data
+@Builder
+public class GetEmployeeQueryDTO {
+    Long id;
+    Long no;
+    String name;
+    Long tierCode;
+    String departmentCode;
+    String locationCode;
+    Long supervisorNo;
+    Long salary;
+    Instant entryDate;
+    Instant createdAt;
+    Instant updatedAt;
 
-    Long getDepartmentId();
-    String getDepartmentName();
+    Long departmentId;
+    String departmentName;
 
-    Long getTierId();
-    String getTierName();
+    Long tierId;
+    String tierName;
 
-    Long getLocationId();
-    String getLocationName();
+    Long locationId;
+    String locationName;
 
-    Long getSupervisorId();
-    String getSupervisorName();
+    Long supervisorId;
+    String supervisorName;
 }

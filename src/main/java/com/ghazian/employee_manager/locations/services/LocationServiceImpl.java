@@ -143,7 +143,7 @@ public class LocationServiceImpl implements LocationService {
                 .address(param.getAddress())
                 .build();
 
-        entity = locationRepository.save(entity);
+        entity = locationRepository.insert(entity);
 
         return LocationDTO.builder()
                 .id(entity.getId())
@@ -180,7 +180,7 @@ public class LocationServiceImpl implements LocationService {
         row.setName(newData.getName());
         row.setAddress(newData.getAddress());
 
-        row = locationRepository.save(row);
+        row = locationRepository.update(id, row);
 
         return LocationDTO.builder()
                 .id(row.getId())
@@ -192,9 +192,9 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public void delete(long id) {
-        Location row = locationRepository.findById(id)
+        locationRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Location does not exist"));
 
-        locationRepository.delete(row);
+        locationRepository.delete(id);
     }
 }
