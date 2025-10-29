@@ -11,42 +11,62 @@ Made using:
 
 ## Prerequisite
 
-This project requires podman and podman-compose
+This project requires Java 21, podman, and podman-compose already installed.
 
 ## Installation
 
-1. Clone this repository
-2. Clone the frontend repository
-3. Run the PostgreSQL image
+### Backend
+1. Clone this repository (backend)
+2. Open terminal on the directory containing backend repository. Then run the PostgreSQL image:
    ```shell
    podman-compose up db
    ```
-4. Open terminal on the directory containing frontend repository, and run it.
+3. Set up the .env file. For example,
+   ```env
+   POSTGRES_DB=podmandb
+   POSTGRES_USER=podmanuser
+   POSTGRES_PASSWORD=12345678
+   
+   # Change the end fragment to be the same as POSTGRES_DB value
+   SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/podmandb
+   ```
+4. Run the server using the following command:
    ```shell
+   set -a; source .env; set +a; ./gradlew bootRun
+   ```
+
+Containerization for the backend server did not get picked up in time due to time constraint. Therefore manual server build using the above steps is needed.
+
+### Frontend
+1. Clone the [frontend repository](github.com/mghazian/fe-employee-manager)
+4. Open terminal on the directory containing frontend repository, build and run it.
+   ```shell
+   npm run build
    npm run start
    ```
-5. Verify the URL in http://localhost:5173/location can be accessed.
+3Verify the URL in http://localhost:3000/location can be accessed.
+
 
 ## How to Use
 
-Due to constraint of time, the navigation in the frontend is limited. Therefore, navigation to main pages needs to be done manually.
+Due to constraint of time, the navigation in the frontend is limited. Therefore, **navigation to main pages needs to be entered manually by typing/copy-pasting the URL.**
 
 ### Main Dashboard Links
 
 Here is the list of the URL where the rest of the module can be reachable from.
 
-- Location dashboard: http://localhost:5173/location
-- Tier dashboard: http://localhost:5173/tier
-- Department dashboard: http://localhost:5173/department
-- Employee dashboard: http://localhost:5173/employee
+- Location dashboard: http://localhost:3000/location
+- Tier dashboard: http://localhost:3000/tier
+- Department dashboard: http://localhost:3000/department
+- Employee dashboard: http://localhost:3000/employee
 
 ### Analytic Links
 
 The following list cannot be accessible yet from anywhere unfortunately, so direct URL access is needed. 
 
-- Salary ranking: http://localhost:5173/employee/salary-ranking
-- Cumulative salary per department: http://localhost:5173/employee/cumulative-salary-per-department
-- Department by location: http://localhost:5173/employee/department-by-location
+- Salary ranking: http://localhost:3000/employee/salary-ranking
+- Cumulative salary per department: http://localhost:3000/employee/cumulative-salary-per-department
+- Department by location: http://localhost:3000/employee/department-by-location
 
 ## General Overview
 
